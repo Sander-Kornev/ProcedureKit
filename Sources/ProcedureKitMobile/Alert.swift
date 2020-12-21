@@ -25,7 +25,7 @@ import UIKit
  */
 open class AlertProcedure: Procedure {
 
-    internal let controller: UIAlertController
+    public let controller: UIAlertController
 
     internal let waitForDismissal: Bool
 
@@ -136,7 +136,6 @@ open class AlertProcedure: Procedure {
         addCondition(MutuallyExclusive<UIAlertController>())
     }
 
-    @available(*, deprecated, message: "Use init(title:message:style:from:waitForDismissal:) instead.")
     public convenience init(presentAlertFrom presenting: PresentingViewController, withPreferredStyle preferredAlertStyle: UIAlertController.Style = .alert, waitForDismissal: Bool = true) {
         self.init(title: nil, message: nil, from: presenting, waitForDismissal: waitForDismissal)
     }
@@ -144,11 +143,12 @@ open class AlertProcedure: Procedure {
     open override func execute() {
         guard false == isCancelled else { return }
 
-        if controller.actions.isEmpty {
-            add(actionWithTitle: NSLocalizedString("Okay", comment: "Okay"))
-        }
-
         let present = UIBlockProcedure { [weak self] in
+            
+            if self?.controller.actions.isEmpty == true {
+                self?.add(actionWithTitle: NSLocalizedString("Okay", comment: "Okay"))
+            }
+            
             guard let this = self, let viewController = this.viewController else { return }
             viewController.present(this.controller, animated: true) {
                 guard let alsothis = self else { return }

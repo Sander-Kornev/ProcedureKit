@@ -86,8 +86,6 @@ open class UIBlockProcedure: BlockProcedure {
     }
 }
 
-
-@available(*, deprecated, message: "Use BlockProcedure directly and call .finish() on the block argument instead.")
 open class AsyncBlockProcedure: BlockProcedure {
 
     public typealias Output = Void

@@ -69,13 +69,15 @@ open class AsyncResultProcedure<Output>: ResultProcedure<Output> {
 
     public init(block: @escaping Block) {
         super.init { (procedure) in
-            block { result in
-                defer {
-                    if false == procedure.isFinished {
-                        procedure.finish(with: procedure.output.error)
+            DispatchQueue.main.async {
+                block { result in
+                    defer {
+                        if false == procedure.isFinished {
+                            procedure.finish(with: procedure.output.error)
+                        }
                     }
+                    procedure.finish(withResult: result)
                 }
-                procedure.finish(withResult: result)
             }
         }
     }
